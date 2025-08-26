@@ -8,7 +8,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-// DownloadFile یک فایل را از تلگرام دانلود و در مسیر مشخصی ذخیره می‌کند
 func DownloadFile(api *tgbotapi.BotAPI, fileID, destPath string) error {
 	fileConfig := tgbotapi.FileConfig{FileID: fileID}
 	file, err := api.GetFile(fileConfig)

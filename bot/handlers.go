@@ -10,7 +10,6 @@ import (
 	"github.com/hvmidrezv/gozipperbot/utils"
 )
 
-// handleUpdate نقطه ورود برای آپدیت‌های جدید است و آن‌ها را به هندلرهای مناسب هدایت می‌کند
 func (b *Bot) handleUpdate(update tgbotapi.Update) {
 	if update.Message != nil {
 		b.handleMessage(update.Message)
@@ -139,25 +138,30 @@ func (b *Bot) handleDocument(message *tgbotapi.Message) {
 		err = utils.UnzipSource(tempZipPath, destDir)
 		if err != nil {
 			log.Printf("Error unzipping: %v", err)
+			_, _ = b.API.Send(tgbotapi.NewMessage(chatID, "خطایی در استخراج فایل رخ داد."))
 			return
 		}
 
-		resultZipPath := filepath.Join(os.TempDir(), fmt.Sprintf("extracted-archive-%d.zip", chatID))
-		err = utils.ZipSource(destDir, resultZipPath)
+		files, err := os.ReadDir(destDir)
 		if err != nil {
-			log.Printf("Error re-zipping: %v", err)
+			log.Printf("Error reading extracted files: %v", err)
+			_, _ = b.API.Send(tgbotapi.NewMessage(chatID, "خطایی در خواندن فایل‌های استخراج شده رخ داد."))
 			return
 		}
 
-		doc := tgbotapi.NewDocument(chatID, tgbotapi.FilePath(resultZipPath))
-		doc.Caption = "فایل‌های استخراج شده در این آرشیو قرار دارند."
-		_, _ = b.API.Send(doc)
+		for _, file := range files {
+			filePath := filepath.Join(destDir, file.Name())
+			if !file.IsDir() {
+				doc := tgbotapi.NewDocument(chatID, tgbotapi.FilePath(filePath))
+				doc.Caption = fmt.Sprintf("فایل: %s", file.Name())
+				_, _ = b.API.Send(doc)
+			}
+		}
 
 		state.State = "idle"
 		b.State.Set(chatID, state)
 		_ = os.Remove(tempZipPath)
 		_ = os.RemoveAll(destDir)
-		_ = os.Remove(resultZipPath)
 
 	default:
 		b.sendStartMessage(chatID)

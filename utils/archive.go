@@ -7,9 +7,7 @@ import (
 	"path/filepath"
 )
 
-// ZipSource محتویات یک پوشه را در یک فایل zip فشرده می‌کند
 func ZipSource(source, target string) error {
-	// ... (کد این تابع دقیقا همانند نسخه قبلی است)
 	f, err := os.Create(target)
 	if err != nil {
 		return err
@@ -57,7 +55,6 @@ func ZipSource(source, target string) error {
 	})
 }
 
-// UnzipSource یک فایل zip را در یک پوشه مقصد استخراج می‌کند
 func UnzipSource(source, destination string) error {
 	// ... (کد این تابع دقیقا همانند نسخه قبلی است)
 	reader, err := zip.OpenReader(source)
