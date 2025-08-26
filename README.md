@@ -10,6 +10,8 @@ GoZipperBot is a fully-functional Telegram bot written in **Go**, allowing users
 
 This project was created as a **portfolio piece** to showcase backend development skills in Go, stateful bot design, API integration, and Docker-based deployment.
 
+Demo: https://t.me/GoZipperBot
+
 ---
 
 ## ✨ Features
