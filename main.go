@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/hvmidrezv/gozipperbot/bot"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -17,5 +18,15 @@ func main() {
 		log.Fatalf("Failed to create bot: %v", err)
 	}
 
-	b.Start()
+	// Start the bot in a separate goroutine
+	go b.Start()
+
+	// Start a dummy HTTP server to bind to the required port
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default to port 8080 if PORT is not set
+	}
+
+	log.Printf("Starting HTTP server on port %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
