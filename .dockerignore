@@ -1,0 +1,10 @@
+# Git directory
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Local development files
+*.md
